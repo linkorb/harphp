@@ -1,0 +1,56 @@
+# HarPhp Configuration
+# Copy this file to harphp.yaml in your working directory.
+# Alternatively, use --config=path/to/config.yaml to specify a different file.
+#
+# Patterns can be:
+#   - Simple globs: *.jpg, api/*, **/images/**
+#   - Regular expressions: /^https:\/\/api\./i, #/v[0-9]+/#
+
+filters:
+  # Ignore rules - matching entries will be EXCLUDED
+  ignore:
+    # Ignore requests to specific domains (supports globs and regex)
+    domains:
+      - "*.google-analytics.com"
+      - "*.doubleclick.net"
+      - "fonts.googleapis.com"
+      - "/.*\\.facebook\\.com$/i"
+    
+    # Ignore requests matching path patterns
+    paths:
+      - "/analytics/*"
+      - "/tracking/**"
+      - "*/pixel.gif"
+    
+    # Ignore requests by file extension
+    extensions:
+      - jpg
+      - jpeg
+      - png
+      - gif
+      - webp
+      - svg
+      - woff
+      - woff2
+      - ttf
+      - eot
+    
+    # Ignore specific URL patterns
+    urls:
+      - "*utm_source=*"
+      - "*fbclid=*"
+      - "/.*\\/api\\/health\\/?$/i"
+
+  # Include rules (whitelist mode) - ONLY matching entries will be INCLUDED
+  # Note: If include rules are defined, ignore rules are not used
+  # include:
+  #   domains:
+  #     - "api.example.com"
+  #     - "*.myapp.com"
+  #   paths:
+  #     - "/api/**"
+  #   extensions:
+  #     - json
+  #     - html
+  #   urls:
+  #     - "*example.com/api/*"
