@@ -35,11 +35,9 @@ ENV EMBED="/go/src/app/dist/app/"
 # Skip Caddy modules we don't need for CLI-only usage
 ENV XCADDY_ARGS=""
 
-# Ignore platform requirements for the builder's internal tooling
-ENV COMPOSER_FLAGS="--ignore-platform-reqs"
-
 # Build the static binary
+# COMPOSER_IGNORE_PLATFORM_REQS affects all composer operations including the builder's internal tooling
 RUN EMBED="${EMBED}" \
     PHP_EXTENSIONS="${PHP_EXTENSIONS}" \
-    COMPOSER_FLAGS="${COMPOSER_FLAGS}" \
+    COMPOSER_IGNORE_PLATFORM_REQS=1 \
     ./build-static.sh
