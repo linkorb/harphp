@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/linkorb/harphp/compare/v1.0.2...v1.0.3) (2026-01-19)
+
+
+### Bug Fixes
+
+* use COMPOSER_IGNORE_PLATFORM_REQS env var for builder tooling ([d60236c](https://github.com/linkorb/harphp/commit/d60236c69173d56d385e2ad50358bcdc6144f460))
+
 ## [1.0.2](https://github.com/linkorb/harphp/compare/v1.0.1...v1.0.2) (2026-01-19)
 
 
