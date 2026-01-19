@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/linkorb/harphp/compare/v1.0.4...v1.0.5) (2026-01-19)
+
+
+### Bug Fixes
+
+* use GOTOOLCHAIN=auto for Go version compatibility ([8d98d87](https://github.com/linkorb/harphp/commit/8d98d87226474813443afdf8d43fc596d387a8b5))
+
 ## [1.0.4](https://github.com/linkorb/harphp/compare/v1.0.3...v1.0.4) (2026-01-19)
 
 
