@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/linkorb/harphp/compare/v1.0.5...v1.0.6) (2026-01-19)
+
+
+### Bug Fixes
+
+* remove GNU build variant, simplify to musl-only ([99b29b3](https://github.com/linkorb/harphp/commit/99b29b39162a9334724bdb48f003b6cb55e7794c))
+
 ## [1.0.5](https://github.com/linkorb/harphp/compare/v1.0.4...v1.0.5) (2026-01-19)
 
 
