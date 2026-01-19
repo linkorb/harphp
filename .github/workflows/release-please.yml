@@ -58,13 +58,11 @@ jobs:
 
       - name: Determine builder image
         id: builder
-        env:
-          FRANKENPHP_VERSION: "1.4.3"
         run: |
           if [ "${{ matrix.libc }}" = "gnu" ]; then
-            echo "image=dunglas/frankenphp:${FRANKENPHP_VERSION}-builder-gnu" >> $GITHUB_OUTPUT
+            echo "image=dunglas/frankenphp:static-builder-gnu" >> $GITHUB_OUTPUT
           else
-            echo "image=dunglas/frankenphp:${FRANKENPHP_VERSION}-builder" >> $GITHUB_OUTPUT
+            echo "image=dunglas/frankenphp:static-builder" >> $GITHUB_OUTPUT
           fi
 
       - name: Build static binary

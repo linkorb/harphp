@@ -1,11 +1,7 @@
 # FrankenPHP Static Build Dockerfile for harphp
 # Produces a standalone CLI executable with embedded PHP runtime
-#
-# Note: Using pinned version to avoid Go/Caddy version incompatibility issues.
-# The static-builder:latest may have Go versions that don't match Caddy requirements.
 
-ARG FRANKENPHP_VERSION=1.4.3
-ARG BUILDER_IMAGE=dunglas/frankenphp:${FRANKENPHP_VERSION}-builder
+ARG BUILDER_IMAGE=dunglas/frankenphp:static-builder
 
 FROM --platform=$BUILDPLATFORM ${BUILDER_IMAGE}
 
@@ -41,7 +37,9 @@ ENV XCADDY_ARGS=""
 
 # Build the static binary
 # COMPOSER_IGNORE_PLATFORM_REQS affects all composer operations including the builder's internal tooling
+# GOTOOLCHAIN=auto allows Go to download a newer version if Caddy requires it
 RUN EMBED="${EMBED}" \
     PHP_EXTENSIONS="${PHP_EXTENSIONS}" \
     COMPOSER_IGNORE_PLATFORM_REQS=1 \
+    GOTOOLCHAIN=auto \
     ./build-static.sh
