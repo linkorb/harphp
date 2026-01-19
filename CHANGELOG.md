@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/linkorb/harphp/compare/v1.0.1...v1.0.2) (2026-01-19)
+
+
+### Bug Fixes
+
+* add COMPOSER_FLAGS to ignore platform reqs in builder ([28e0453](https://github.com/linkorb/harphp/commit/28e0453bf49419d1555070d26b1a265fff61b098))
+
 ## [1.0.1](https://github.com/linkorb/harphp/compare/v1.0.0...v1.0.1) (2026-01-19)
 
 
