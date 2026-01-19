@@ -35,15 +35,9 @@ jobs:
           - target: linux-x86_64
             arch: x86_64
             platform: linux/amd64
-            libc: musl
-          - target: linux-x86_64-gnu
-            arch: x86_64
-            platform: linux/amd64
-            libc: gnu
           - target: linux-aarch64
             arch: aarch64
             platform: linux/arm64
-            libc: musl
 
     steps:
       - name: Checkout
@@ -56,20 +50,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Determine builder image
-        id: builder
-        run: |
-          if [ "${{ matrix.libc }}" = "gnu" ]; then
-            echo "image=dunglas/frankenphp:static-builder-gnu" >> $GITHUB_OUTPUT
-          else
-            echo "image=dunglas/frankenphp:static-builder" >> $GITHUB_OUTPUT
-          fi
-
       - name: Build static binary
         run: |
           docker build \
             --platform ${{ matrix.platform }} \
-            --build-arg BUILDER_IMAGE=${{ steps.builder.outputs.image }} \
+            --build-arg BUILDER_IMAGE=dunglas/frankenphp:static-builder \
             -t harphp-builder-${{ matrix.target }} \
             -f build/Dockerfile \
             .

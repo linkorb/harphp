@@ -27,7 +27,6 @@ Available binaries:
 | Platform | Binary | Description |
 |----------|--------|-------------|
 | Linux x86_64 | `harphp-linux-x86_64` | Fully static (musl), most portable |
-| Linux x86_64 | `harphp-linux-x86_64-gnu` | glibc-linked, supports dynamic extensions |
 | Linux ARM64 | `harphp-linux-aarch64` | Fully static (musl), for ARM64/aarch64 |
 
 ### From Source (requires PHP 8.1+)
