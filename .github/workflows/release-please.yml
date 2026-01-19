@@ -1,0 +1,142 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Run Release Please
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          release-type: php
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-binaries:
+    name: Build ${{ matrix.target }}
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: linux-x86_64
+            arch: x86_64
+            platform: linux/amd64
+            libc: musl
+          - target: linux-x86_64-gnu
+            arch: x86_64
+            platform: linux/amd64
+            libc: gnu
+          - target: linux-aarch64
+            arch: aarch64
+            platform: linux/arm64
+            libc: musl
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        if: matrix.arch == 'aarch64'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Determine builder image
+        id: builder
+        run: |
+          if [ "${{ matrix.libc }}" = "gnu" ]; then
+            echo "image=dunglas/frankenphp:static-builder-gnu" >> $GITHUB_OUTPUT
+          else
+            echo "image=dunglas/frankenphp:static-builder" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build static binary
+        run: |
+          docker build \
+            --platform ${{ matrix.platform }} \
+            --build-arg BUILDER_IMAGE=${{ steps.builder.outputs.image }} \
+            -t harphp-builder-${{ matrix.target }} \
+            -f build/Dockerfile \
+            .
+
+      - name: Extract binary
+        run: |
+          mkdir -p dist
+          CONTAINER_ID=$(docker create harphp-builder-${{ matrix.target }})
+          
+          docker cp "${CONTAINER_ID}:/go/src/app/dist/frankenphp-linux-${{ matrix.arch }}" "dist/harphp-${{ matrix.target }}" 2>/dev/null || \
+          docker cp "${CONTAINER_ID}:/go/src/app/dist/frankenphp-linux-x86_64" "dist/harphp-${{ matrix.target }}" 2>/dev/null || \
+          docker cp "${CONTAINER_ID}:/go/src/app/dist/frankenphp-linux-aarch64" "dist/harphp-${{ matrix.target }}" 2>/dev/null || \
+          {
+            echo "Available files in dist:"
+            docker run --rm harphp-builder-${{ matrix.target }} ls -la /go/src/app/dist/
+            exit 1
+          }
+          
+          docker rm "$CONTAINER_ID"
+          chmod +x "dist/harphp-${{ matrix.target }}"
+
+      - name: Generate checksum
+        run: |
+          cd dist
+          sha256sum harphp-${{ matrix.target }} > harphp-${{ matrix.target }}.sha256
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: harphp-${{ matrix.target }}
+          path: |
+            dist/harphp-${{ matrix.target }}
+            dist/harphp-${{ matrix.target }}.sha256
+
+  upload-assets:
+    name: Upload Release Assets
+    needs: [release-please, build-binaries]
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release
+          
+          for dir in artifacts/harphp-*; do
+            if [ -d "$dir" ]; then
+              cp "$dir"/* release/
+            fi
+          done
+          
+          cd release
+          cat *.sha256 > checksums.txt
+          
+          echo "Release assets:"
+          ls -lh
+
+      - name: Upload assets to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd release
+          for file in harphp-* checksums.txt; do
+            gh release upload "${{ needs.release-please.outputs.tag_name }}" "$file" \
+              --repo "${{ github.repository }}"
+          done
