@@ -4,7 +4,13 @@
     "description": "CLI tool for working with HAR (HTTP Archive) files",
     "type": "project",
     "license": "MIT",
-    "keywords": ["har", "http", "archive", "cli", "filter"],
+    "keywords": [
+        "har",
+        "http",
+        "archive",
+        "cli",
+        "filter"
+    ],
     "require": {
         "php": "^8.1",
         "symfony/console": "^6.0|^7.0",
@@ -15,6 +21,8 @@
             "HarPhp\\": "src/"
         }
     },
-    "bin": ["bin/harphp"],
+    "bin": [
+        "bin/harphp"
+    ],
     "minimum-stability": "stable"
 }
