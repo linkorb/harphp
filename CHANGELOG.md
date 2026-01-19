@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/linkorb/harphp/compare/v1.0.3...v1.0.4) (2026-01-19)
+
+
+### Bug Fixes
+
+* pin FrankenPHP version to 1.4.3 for Go/Caddy compatibility ([352088e](https://github.com/linkorb/harphp/commit/352088e12519060d716801537c28dc55239208f7))
+
 ## [1.0.3](https://github.com/linkorb/harphp/compare/v1.0.2...v1.0.3) (2026-01-19)
 
 
