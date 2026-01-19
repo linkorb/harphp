@@ -1,6 +1,6 @@
 {
     "name": "linkorb/harphp",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "CLI tool for working with HAR (HTTP Archive) files",
     "type": "project",
     "license": "MIT",
