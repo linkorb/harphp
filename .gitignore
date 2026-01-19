@@ -1,5 +1,4 @@
 /vendor/
-composer.lock
 .env.local
 
 # FrankenPHP build artifacts
